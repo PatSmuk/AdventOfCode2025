@@ -1,8 +1,3 @@
-const std = @import("std");
-const util = @import("util");
-
-const print = std.debug.print;
-
 pub fn main() !void {
     var gpa: std.heap.DebugAllocator(.{}) = .init;
     defer _ = gpa.deinit();
@@ -20,3 +15,8 @@ pub fn main() !void {
 fn parseLine(allocator: std.mem.Allocator, line: []const u8) ![]u8 {
     return allocator.dupe(u8, line);
 }
+
+const std = @import("std");
+const util = @import("util");
+
+const print = std.debug.print;
