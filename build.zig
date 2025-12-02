@@ -1,6 +1,6 @@
 const std = @import("std");
 
-const MAX_DAY = 1;
+const MAX_DAY = 2;
 
 pub fn build(b: *std.Build) !void {
     // Standard target options allows the person running `zig build` to choose
