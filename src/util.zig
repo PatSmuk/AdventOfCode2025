@@ -28,8 +28,11 @@ pub fn readInputFileLines(
     defer file.close();
 
     // Read the entire contents
-    const file_contents = try file.readToEndAlloc(allocator, 1024 * 1024 * 16);
-    defer allocator.free(file_contents);
+    const buf = try allocator.alloc(u8, 1024 * 1024 * 16);
+    defer allocator.free(buf);
+    var reader = file.reader(&[_]u8{});
+    const bytes_read = try reader.interface.readSliceShort(buf);
+    const file_contents = buf[0..bytes_read];
 
     var lines_iterator = std.mem.tokenizeAny(u8, file_contents, "\n\r");
 
