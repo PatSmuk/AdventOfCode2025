@@ -3,13 +3,10 @@ pub fn main() !void {
     defer _ = gpa.deinit();
     const allocator = gpa.allocator();
 
-    const lines = try util.readInputFileLines([]u8, allocator, "dayXX.txt", parseLine);
-    defer allocator.free(lines);
-    defer {
-        for (lines) |line| {
-            allocator.free(line);
-        }
-    }
+    const input_allocator = std.heap.ArenaAllocator.init(allocator);
+    defer input_allocator.deinit();
+    const lines = try util.readInputFileLines([]u8, input_allocator.allocator(), "dayXX.txt", parseLine);
+    _ = lines; // autofix
 }
 
 fn parseLine(allocator: std.mem.Allocator, line: []const u8) ![]u8 {
