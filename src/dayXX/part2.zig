@@ -3,7 +3,7 @@ pub fn main() !void {
     defer _ = gpa.deinit();
     const allocator = gpa.allocator();
 
-    const input_allocator = std.heap.ArenaAllocator.init(allocator);
+    var input_allocator = std.heap.ArenaAllocator.init(allocator);
     defer input_allocator.deinit();
     const lines = try util.readInputFileLines([]u8, input_allocator.allocator(), "dayXX.txt", parseLine);
     _ = lines; // autofix
