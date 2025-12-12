@@ -47,6 +47,31 @@ pub fn readInputFileLines(
     return parsed_lines.toOwnedSlice(allocator);
 }
 
+/// Dumps the image data in `image` to output file `fileName` in PPM format.
+pub fn dumpImage(image_buf: []const []const u8, output_file_path: []const u8) !void {
+    std.debug.assert(image_buf.len > 0);
+    std.debug.assert(image_buf[0].len > 0);
+    std.debug.assert(image_buf[0].len % 3 == 0);
+    for (0..image_buf.len) |y| {
+        std.debug.assert(image_buf[y].len == image_buf[0].len);
+    }
+
+    const file = try std.fs.cwd().createFile(output_file_path, .{});
+    defer file.close();
+
+    var write_buf = [_]u8{0} ** 1024;
+    var writer = file.writer(&write_buf);
+
+    try writer.interface.print("P6\n", .{});
+    try writer.interface.print("{d} {d}\n", .{ image_buf[0].len / 3, image_buf.len });
+    try writer.interface.print("255\n", .{});
+
+    for (0..image_buf.len) |y| {
+        try writer.interface.writeAll(image_buf[y]);
+    }
+    try writer.interface.flush();
+}
+
 /// Increment `key` within `map` by `n` if it exists, otherwise set it to `n`.
 pub fn mapInc(map: anytype, key: anytype, n: anytype) !void {
     const existing = map.get(key) orelse 0;
